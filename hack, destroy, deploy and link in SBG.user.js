@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.5.5
+// @version      0.5.6
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=sytes.net
-// @downloadURL    https://github.com/AndreyIvanov/hald/raw/main/hack%2C%20destroy%2C%20deploy%20and%20link%20in%20SBG.user.js
+// @downloadURL  https://github.com/AndreyIvanov/hald/raw/main/hack%2C%20destroy%2C%20deploy%20and%20link%20in%20SBG.user.js
 // @updateURL    https://github.com/AndreyIvanov/hald/raw/main/hack%2C%20destroy%2C%20deploy%20and%20link%20in%20SBG.user.js
 // @grant        none
 // ==/UserScript==
@@ -112,7 +112,7 @@ function QuickHack(){
           WinPopup.click();
 }
     let discoverButt = document.createElement('button');
-    discoverButt.innerText = 'H';
+    discoverButt.innerText = 'Hck';
     discoverButt.addEventListener('click', event => {
       QuickHack();
     });
@@ -136,7 +136,7 @@ function QuickHack(){
     });
     document.querySelector('.i-buttons').appendChild(deploy3Butt);
     let linkButt = document.createElement('button');
-    linkButt.innerText = 'L';
+    linkButt.innerText = 'QLnk';
     linkButt.addEventListener('click', event => {
       QuickLink();
     });
