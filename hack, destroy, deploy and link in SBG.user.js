@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.5.3
+// @version      0.5.4
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -23,7 +23,123 @@
             bm[e.l] = e.g
         }
     })
+    var WinPopup = document.querySelector(".popup-close, .popup-header");
 
+    function hideButt(){
+var bDiscover = document.getElementById("discover");
+bDiscover.style.display = 'none';
+var bDeploy = document.getElementById("deploy");
+bDeploy.style.display = 'none';
+var bDraw = document.getElementById("draw");
+bDraw.style.display = 'none';
+}
+
+function QuickLink(){
+        const guid = $('.info').attr('data-guid')
+        var ldcoord = null;
+        const json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: guid },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
+                             success: function(data)
+                               {
+                                   ldcoord = data.data.c;
+        const ldjson = $.ajax({
+            method: 'get',
+            url: '/api/draw',
+            data: {
+                guid,
+                position: ldcoord
+            },
+            headers: { authorization: `Bearer ${localStorage.getItem('auth')}` },
+            success: function(ld)
+            {
+                WinPopup.click();
+                localStorage.setItem('follow', false)
+                //console.log('#refs-list',ld.data);
+                ld.data.sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).forEach(e => {
+                    if (e.a >= 2 && getDist(e.g[1],ldcoord) <= 350){
+                        console.log(e.g);
+                        const d = getDist(e.g[1],ldcoord)
+                        console.log('pname=',e.t,' dist=',distToString(d));
+                        console.log('from=',guid,' to=',e.p,' coo=',e.g[0]);
+                        const from = guid
+                        const to = e.p
+                        const cofrom = e.g[0]
+
+                        const json = $.ajax({
+                            method: 'post',
+                            url: '/api/draw',
+                            data: {
+                                from, to,
+                                position: cofrom
+                            },
+                            headers: { authorization: `Bearer ${localStorage.getItem('auth')}` }
+                        })
+
+                        }
+            })
+            }
+        })
+        }
+                            });
+}
+
+function QuickHack(){
+          const guid = $('.info').attr('data-guid');
+          var coord = null;
+          const json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: guid },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
+                             success: function(data)
+                               {
+                                   coord = data.data.c;
+                                   const d_discover = $.ajax({
+                                       method: 'post',
+                                       url: `/api/discover`,
+                                       data: {
+                                           position: coord,
+                                           guid
+                                       },
+                                       headers: {
+                                           authorization: `Bearer ${localStorage.getItem('auth')}`
+                                       },
+                                       success: function(disdata)
+                                       {
+                                           console.log('Hackdata=',disdata);
+                                       }
+                                   });
+
+                               }
+                              });
+          WinPopup.click();
+}
+    let discoverButt = document.createElement('button');
+    discoverButt.innerText = 'H';
+    discoverButt.addEventListener('click', event => {
+      QuickHack();
+    });
+    document.querySelector('.i-buttons').appendChild(discoverButt);
+    let deployRButt = document.createElement('button');
+    deployRButt.innerText = 'DRnd';
+    deployRButt.addEventListener('click', event => {
+      alert('DeployRnd');
+    });
+    document.querySelector('.i-buttons').appendChild(deployRButt);
+    let deployMButt = document.createElement('button');
+    deployMButt.innerText = 'DMax';
+    deployMButt.addEventListener('click', event => {
+      alert('DeployMax');
+    });
+    document.querySelector('.i-buttons').appendChild(deployMButt);
+    let deploy3Butt = document.createElement('button');
+    deploy3Butt.innerText = 'D3';
+    deploy3Butt.addEventListener('click', event => {
+      alert('Deploy3Rz');
+    });
+    document.querySelector('.i-buttons').appendChild(deploy3Butt);
+    let linkButt = document.createElement('button');
+    linkButt.innerText = 'L';
+    linkButt.addEventListener('click', event => {
+      QuickLink();
+    });
+    document.querySelector('.i-buttons').appendChild(linkButt);
+    hideButt();
 
 var pImg = document.getElementById("i-image");
 pImg.style.minHeight = '35px';
