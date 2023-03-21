@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.5.4
+// @version      0.5.5
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=sytes.net
+// @downloadURL    https://github.com/AndreyIvanov/hald/raw/main/hack%2C%20destroy%2C%20deploy%20and%20link%20in%20SBG.user.js
+// @updateURL    https://github.com/AndreyIvanov/hald/raw/main/hack%2C%20destroy%2C%20deploy%20and%20link%20in%20SBG.user.js
 // @grant        none
 // ==/UserScript==
 /* globals jQuery, $, waitForKeyElements, ol */
@@ -154,7 +156,7 @@ pImg.style.minHeight = '35px';
         else if (distance < 1000) return `${formatter.format(distance)} m`
         else return `${formatter.format(distance / 1000)} km`
     }
-document.querySelector("*, .popup").style.fontSize = "small";
+//document.querySelector("*, .popup").style.fontSize = "small";
 document.addEventListener('keydown', function (event) {
 
       if (event.key === 'a' || event.code === 'a') {
