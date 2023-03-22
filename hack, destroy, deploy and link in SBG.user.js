@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.6.0
+// @version      0.6.2
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -36,9 +36,14 @@
     RefreshInv();
     function hideButt(){
         const buttId = ['link-tg','discover','deploy','draw','inventory-delete-section'];
+        const buttCl = ['outer-link','deploy-slider-wrp'];
         buttId.forEach(e => {
             var b = document.getElementById(e);
             b.style.display = 'none';
+        })
+        buttCl.forEach(e => {
+            var b = $(`.${e}`);
+            b.css({ "display": "none"});
         })
     }
 
@@ -67,7 +72,52 @@
                                                  console.log(e.g);
                                                  const d = getDist(e.g[1],ldcoord)
                                                  console.log('pname=',e.t,' dist=',distToString(d));
-                                                 console.log('from=',guid,' to=',e.p,' coo=',e.g[0]);
+                                                 const from = guid
+                                                 const to = e.p
+                                                 const cofrom = e.g[0]
+
+                                                 const json = $.ajax({
+                                                     method: 'post',
+                                                     url: '/api/draw',
+                                                     data: {
+                                                         from, to,
+                                                         position: cofrom
+                                                     },
+                                                     headers: { authorization: `Bearer ${localStorage.getItem('auth')}` }
+                                                 })
+
+                                                 }
+                                         })
+                                     }
+                                 })
+                                 }
+                            });
+    }
+    function QuickLinkMax(){
+        const guid = $('.info').attr('data-guid')
+        var ldcoord = null;
+        const json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: guid },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
+                             success: function(data)
+                             {
+                                 ldcoord = data.data.c;
+                                 const ldjson = $.ajax({
+                                     method: 'get',
+                                     url: '/api/draw',
+                                     data: {
+                                         guid,
+                                         position: ldcoord
+                                     },
+                                     headers: { authorization: `Bearer ${localStorage.getItem('auth')}` },
+                                     success: function(ld)
+                                     {
+                                         WinPopup.click();
+                                         localStorage.setItem('follow', false)
+                                         //console.log('#refs-list',ld.data);
+                                         ld.data.sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).forEach(e => {
+                                             if (e.a >= 2){
+                                                 console.log(e.g);
+                                                 const d = getDist(e.g[1],ldcoord)
+                                                 console.log('pname=',e.t,' dist=',distToString(d));
                                                  const from = guid
                                                  const to = e.p
                                                  const cofrom = e.g[0]
@@ -274,6 +324,12 @@
         QuickHack();
     });
     document.querySelector('.i-buttons').appendChild(discoverButt);
+    let attackButt = document.createElement('button');
+    attackButt.innerText = 'Attack';
+    attackButt.addEventListener('click', event => {
+        QuickAttack();
+    });
+    document.querySelector('.i-buttons').appendChild(attackButt);
     /*
     let deployRButt = document.createElement('button');
     deployRButt.innerText = 'DRnd';
@@ -289,6 +345,25 @@
     });
     document.querySelector('.i-buttons').appendChild(deployMButt);
 
+    let deploy1Butt = document.createElement('button');
+    deploy1Butt.innerText = 'Full-1';
+    deploy1Butt.addEventListener('click', event => {
+        QuickDeployFull(1);
+    });
+    document.querySelector('.i-buttons').appendChild(deploy1Butt);
+    let deploy2Butt = document.createElement('button');
+    deploy2Butt.innerText = 'Full-2';
+    deploy2Butt.addEventListener('click', event => {
+        QuickDeployFull(2);
+    });
+    document.querySelector('.i-buttons').appendChild(deploy2Butt);
+    let deploy3Butt = document.createElement('button');
+    deploy3Butt.innerText = 'Full-3';
+    deploy3Butt.addEventListener('click', event => {
+        QuickDeployFull(3);
+    });
+    document.querySelector('.i-buttons').appendChild(deploy3Butt);
+
     let update6Butt = document.createElement('button');
     update6Butt.innerText = 'Upd-6';
     update6Butt.addEventListener('click', event => {
@@ -302,25 +377,19 @@
     });
     document.querySelector('.i-buttons').appendChild(update7Butt);
 
-    let deploy3Butt = document.createElement('button');
-    deploy3Butt.innerText = 'Full-3';
-    deploy3Butt.addEventListener('click', event => {
-        QuickDeployFull(3);
-    });
-    document.querySelector('.i-buttons').appendChild(deploy3Butt);
-    let deployAButt = document.createElement('button');
-    deployAButt.innerText = 'Attack';
-    deployAButt.addEventListener('click', event => {
-        QuickAttack();
-    });
-    document.querySelector('.i-buttons').appendChild(deployAButt);
-
     let linkButt = document.createElement('button');
     linkButt.innerText = 'QLink';
     linkButt.addEventListener('click', event => {
         QuickLink();
     });
     document.querySelector('.i-buttons').appendChild(linkButt);
+
+    let linkMaxButt = document.createElement('button');
+    linkMaxButt.innerText = 'QLinkMax';
+    linkMaxButt.addEventListener('click', event => {
+        QuickLinkMax();
+    });
+    document.querySelector('.i-buttons').appendChild(linkMaxButt);
 
     hideButt();
 
