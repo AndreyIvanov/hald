@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.6.4
+// @version      0.6.6
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -16,6 +16,10 @@
     'use strict';
     const rz = [];
     const bm = [];
+    const maxdepl = [];
+    maxdepl[8]=[8,7,7,6,6,5];
+    maxdepl[7]=[7,7,6,6,5,5];
+    maxdepl[6]=[6,6,5,5,5,4];
     function RefreshInv(){
         const inv = JSON.parse(localStorage.getItem('inventory-cache'))
         inv.forEach(e => {
@@ -167,7 +171,7 @@
                             });
         WinPopup.click();
     }
-    function QuickDeployMax(){
+    function QuickDeployMax(lvl){
         const m_guid = $('.info').attr('data-guid');
         var m_coord = null;
 
@@ -175,51 +179,15 @@
                                success: function(data)
                                {
                                    m_coord = data.data.c;
-                                   //7.2
-                                   $.ajax({method: 'post',url: `/api/deploy`,
-                                           data: {
-                                               guid: m_guid,
-                                               core: rz[7],
-                                               position: m_coord
-                                           },
-                                           headers: {authorization: `Bearer ${localStorage.getItem('auth')}` }});
-                                   $.ajax({method: 'post',url: `/api/deploy`,
-                                           data: {
-                                               guid: m_guid,
-                                               core: rz[7],
-                                               position: m_coord
-                                           },
-                                           headers: {authorization: `Bearer ${localStorage.getItem('auth')}` }});
-                                   //6.2
-                                   $.ajax({method: 'post',url: `/api/deploy`,
-                                           data: {
-                                               guid: m_guid,
-                                               core: rz[6],
-                                               position: m_coord
-                                           },
-                                           headers: {authorization: `Bearer ${localStorage.getItem('auth')}` }});
-                                   $.ajax({method: 'post',url: `/api/deploy`,
-                                           data: {
-                                               guid: m_guid,
-                                               core: rz[6],
-                                               position: m_coord
-                                           },
-                                           headers: {authorization: `Bearer ${localStorage.getItem('auth')}` }});
-                                   //5.3 - 5.2
-                                   $.ajax({method: 'post',url: `/api/deploy`,
-                                           data: {
-                                               guid: m_guid,
-                                               core: rz[5],
-                                               position: m_coord
-                                           },
-                                           headers: {authorization: `Bearer ${localStorage.getItem('auth')}` }});
-                                   $.ajax({method: 'post',url: `/api/deploy`,
-                                           data: {
-                                               guid: m_guid,
-                                               core: rz[5],
-                                               position: m_coord
-                                           },
-                                           headers: {authorization: `Bearer ${localStorage.getItem('auth')}` }});
+                                   maxdepl[lvl].forEach(e => {
+                                       $.ajax({method: 'post',url: `/api/deploy`,
+                                               data: {
+                                                   guid: m_guid,
+                                                   core: rz[e],
+                                                   position: m_coord
+                                               },
+                                               headers: {authorization: `Bearer ${localStorage.getItem('auth')}` }});
+                                   });
 
                                    $.ajax({
                                        method: 'post',
@@ -291,6 +259,17 @@
                                             },
                                             headers: {authorization: `Bearer ${localStorage.getItem('auth')}` }});
 
+                                    $.ajax({
+                                        method: 'post',
+                                        url: `/api/discover`,
+                                        data: {
+                                            guid: m6_guid,
+                                            position: m_coord
+                                        },
+                                        headers: {
+                                            authorization: `Bearer ${localStorage.getItem('auth')}`
+                                       }
+                                    });
                                 }
                                });
         WinPopup.click();
@@ -338,12 +317,24 @@
     });
     document.querySelector('.i-buttons').appendChild(deployRButt);
 */
-    let deployMButt = document.createElement('button');
-    deployMButt.innerText = 'DMax';
-    deployMButt.addEventListener('click', event => {
-        QuickDeployMax();
+    let deployM6Butt = document.createElement('button');
+    deployM6Butt.innerText = 'Max-6';
+    deployM6Butt.addEventListener('click', event => {
+        QuickDeployMax(6);
     });
-    document.querySelector('.i-buttons').appendChild(deployMButt);
+    document.querySelector('.i-buttons').appendChild(deployM6Butt);
+    let deployM7Butt = document.createElement('button');
+    deployM7Butt.innerText = 'Max-7';
+    deployM7Butt.addEventListener('click', event => {
+        QuickDeployMax(7);
+    });
+    document.querySelector('.i-buttons').appendChild(deployM7Butt);
+    let deployM8Butt = document.createElement('button');
+    deployM8Butt.innerText = 'Max-8';
+    deployM8Butt.addEventListener('click', event => {
+        QuickDeployMax(8);
+    });
+    document.querySelector('.i-buttons').appendChild(deployM8Butt);
 
     let deploy1Butt = document.createElement('button');
     deploy1Butt.innerText = 'Full-1';
@@ -376,6 +367,12 @@
         QuickUpdate(7);
     });
     document.querySelector('.i-buttons').appendChild(update7Butt);
+    let update8Butt = document.createElement('button');
+    update8Butt.innerText = 'Upd-8';
+    update8Butt.addEventListener('click', event => {
+        QuickUpdate(8);
+    });
+    document.querySelector('.i-buttons').appendChild(update8Butt);
 
     let linkButt = document.createElement('button');
     linkButt.innerText = 'QLink';
@@ -393,8 +390,9 @@
 
     hideButt();
 
-    var pImg = document.getElementById("i-image");
-    pImg.style.minHeight = '35px';
+    var pImgBox = document.getElementById("i-image");
+    pImgBox.style.minHeight = '35px';
+    $('.i-image-box').css({ "min-height": "150px"});
     function getDist(to, from) {
         const line = new ol.geom.LineString([ol.proj.fromLonLat(from), ol.proj.fromLonLat(to)])
         return ol.sphere.getLength(line)
