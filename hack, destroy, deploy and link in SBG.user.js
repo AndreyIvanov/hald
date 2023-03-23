@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.7.0
+// @version      0.7.1
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -103,7 +103,21 @@
                                      {
                                          WinPopup.click();
                                          localStorage.setItem('follow', false)
-                                         //console.log('#refs-list',ld.data);
+                                         const qdraw_discover = $.ajax({
+                                             method: 'post',
+                                             url: `/api/discover`,
+                                             data: {
+                                                 position: ldcoord,
+                                                 guid
+                                             },
+                                             headers: {
+                                                 authorization: `Bearer ${localStorage.getItem('auth')}`
+                                       },
+                                     success: function(disdata)
+                                     {
+                                         console.log('Hackdata=',disdata);
+                                     }
+                                 });
                                          ld.data.sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).forEach(e => {
                                              if (e.a >= 2 && getDist(e.g[1],ldcoord) <= 350){
                                                  console.log(e.g);
@@ -150,6 +164,21 @@
                                          WinPopup.click();
                                          localStorage.setItem('follow', false)
                                          //console.log('#refs-list',ld.data);
+                                         const draw_discover = $.ajax({
+                                             method: 'post',
+                                             url: `/api/discover`,
+                                             data: {
+                                                 position: ldcoord,
+                                                 guid
+                                             },
+                                             headers: {
+                                                 authorization: `Bearer ${localStorage.getItem('auth')}`
+                                       },
+                                     success: function(disdata)
+                                     {
+                                         console.log('Hackdata=',disdata);
+                                     }
+                                 });
                                          ld.data.sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).slice(1, 17).forEach(e => {
                                              if (e.a >= 2){
                                                  console.log(e.g);
