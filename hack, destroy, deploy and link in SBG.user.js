@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.7.1
+// @version      0.7.3
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -20,6 +20,9 @@
     maxdepl[8]=[8,7,7,6,6,5];
     maxdepl[7]=[7,7,6,6,5,5];
     maxdepl[6]=[6,6,5,5,5,4];
+    const type_loot=[];
+    type_loot[1]='core';
+    type_loot[2]='bomb'
     function RefreshInv(){
         const inv = JSON.parse(localStorage.getItem('inventory-cache'))
         inv.forEach(e => {
@@ -31,6 +34,22 @@
             }
         })
     }
+    function createToast(text = '', position = 'top left', container = null) {
+        let parts = position.split(/\s+/);
+        let toast = Toastify({
+            text,
+            duration: 6000,
+            gravity: parts[0],
+            position: parts[1],
+            escapeMarkup: false,
+            className: 'interaction-toast',
+            selector: container,
+        });
+        toast.options.id = Math.round(Math.random() * 1e5);;
+        toast.options.onClick = () => toast.hideToast();
+        return toast;
+    }
+
     async function RepairAll(){
         const inv = JSON.parse(localStorage.getItem('inventory-cache'))
         inv.forEach(e => {
@@ -87,6 +106,7 @@
     async function QuickLink(){
         const guid = $('.info').attr('data-guid')
         var ldcoord = null;
+        let message = '';
         const json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: guid },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
                              success: function(data)
                              {
@@ -113,16 +133,19 @@
                                              headers: {
                                                  authorization: `Bearer ${localStorage.getItem('auth')}`
                                        },
-                                     success: function(disdata)
-                                     {
-                                         console.log('Hackdata=',disdata);
-                                     }
-                                 });
+                                             success: function(disdata)
+                                             {
+                                                 console.log('Hackdata=',disdata);
+                                             }
+                                         });
+                                         let xpall = 0;
+
                                          ld.data.sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).forEach(e => {
                                              if (e.a >= 2 && getDist(e.g[1],ldcoord) <= 350){
                                                  console.log(e.g);
                                                  const d = getDist(e.g[1],ldcoord)
                                                  console.log('pname=',e.t,' dist=',distToString(d));
+                                                 message +=`<br><span>${e.t}</span> link - ${distToString(d)}`;
                                                  const from = guid
                                                  const to = e.p
                                                  const cofrom = e.g[0]
@@ -134,11 +157,20 @@
                                                          from, to,
                                                          position: cofrom
                                                      },
-                                                     headers: { authorization: `Bearer ${localStorage.getItem('auth')}` }
+                                                     headers: { authorization: `Bearer ${localStorage.getItem('auth')}` },
+                                                     success:function(d){
+                                                         console.log('drawdata=',d);
+                                                         xpall = xpall + (d.xp.diff)*1;
+                                                     }
                                                  })
 
                                                  }
                                          })
+                                         message += `<br><span>EXP </span>${xpall}`;
+
+                                         let toast = createToast(`Hacked: ${message}`);
+                                         toast.showToast();
+
                                      }
                                  })
                                  }
@@ -174,11 +206,11 @@
                                              headers: {
                                                  authorization: `Bearer ${localStorage.getItem('auth')}`
                                        },
-                                     success: function(disdata)
-                                     {
-                                         console.log('Hackdata=',disdata);
-                                     }
-                                 });
+                                             success: function(disdata)
+                                             {
+                                                 console.log('Hackdata=',disdata);
+                                             }
+                                         });
                                          ld.data.sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).slice(1, 17).forEach(e => {
                                              if (e.a >= 2){
                                                  console.log(e.g);
@@ -226,6 +258,27 @@
                                      success: function(disdata)
                                      {
                                          console.log('Hackdata=',disdata);
+                                         let message = '';
+                                         if (!disdata.error){
+                                             let hackedloot = disdata.loot;
+                                             hackedloot.forEach(e=>{
+                                                 if (e.t !==3){
+                                                     message += `<br><span>${type_loot[e.t]} </span>${e.l}lvl - ${e.a}`;
+                                                 }
+                                                 else {
+                                                     message += `<br><span>keys</span> ${e.a}`;
+                                                 }
+                                             });
+                                             message += `<br><span>EXP </span>${disdata.xp.diff}`;
+
+                                             let toast = createToast(`Hacked: ${message}`);
+                                             toast.showToast();
+                                         }
+                                         else
+                                         {
+                                             let toast = createToast(`Error: ${disdata.error}`);
+                                             toast.showToast();
+                                         }
                                      }
                                  });
 
