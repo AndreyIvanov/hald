@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.6.6
+// @version      0.7.0
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -31,12 +31,45 @@
             }
         })
     }
+    async function RepairAll(){
+        const inv = JSON.parse(localStorage.getItem('inventory-cache'))
+        inv.forEach(e => {
+            if (e.t === 3){
+                const json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: e.l },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
+                                     success: function(da)
+                                     {
+                                         if (da.data.te == 3){
+                                             if (da.data.co.length < 6){
+                                                 console.log('point ',da.data.t,' not full cores!');
+                                             }
+                                             const jsonrep = $.ajax({
+                                                 method: 'post',
+                                                 url: `/api/repair`,
+                                                 data: {
+                                                     guid: e.l,
+                                                     position: [0,0]
+                                                 },
+                                                 headers: {authorization: `Bearer ${localStorage.getItem('auth')}`},
+                                                 success: function(datarep)
+                                                 {
+                                                     if (!datarep.error){
+                                                         console.log('point=',datarep.data.t,' xp=',datarep.data.xp.diff);
+                                                     }
+                                                 }
+                                             });
+                                         }
+                                     }
+                                    });
+            }
+        });
+    }
     Object.defineProperty(Array.prototype, 'first', {
         value() {
             return this.find(Boolean)
         }
     })
     var WinPopup = document.querySelector(".popup-close, .popup-header");
+
     RefreshInv();
     function hideButt(){
         const buttId = ['link-tg','discover','deploy','draw','inventory-delete-section'];
@@ -51,7 +84,7 @@
         })
     }
 
-    function QuickLink(){
+    async function QuickLink(){
         const guid = $('.info').attr('data-guid')
         var ldcoord = null;
         const json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: guid },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
@@ -97,7 +130,7 @@
                                  }
                             });
     }
-    function QuickLinkMax(){
+    async function QuickLinkMax(){
         const guid = $('.info').attr('data-guid')
         var ldcoord = null;
         const json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: guid },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
@@ -144,7 +177,7 @@
                             });
     }
 
-    function QuickHack(){
+    async function QuickHack(){
         const guid = $('.info').attr('data-guid');
         var coord = null;
         const json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: guid },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
@@ -171,7 +204,7 @@
                             });
         WinPopup.click();
     }
-    function QuickDeployMax(lvl){
+    async function QuickDeployMax(lvl){
         const m_guid = $('.info').attr('data-guid');
         var m_coord = null;
 
@@ -205,7 +238,7 @@
                               });
         WinPopup.click();
     }
-    function QuickDeployFull(lvl){
+    async function QuickDeployFull(lvl){
         const d2_guid = $('.info').attr('data-guid');
         var d2_coord = null;
 
@@ -242,7 +275,7 @@
                                });
         WinPopup.click();
     }
-    function QuickUpdate(lvl){
+    async function QuickUpdate(lvl){
         const m6_guid = $('.info').attr('data-guid');
         var m_coord = null;
 
@@ -274,7 +307,7 @@
                                });
         WinPopup.click();
     }
-    function QuickAttack(){
+    async function QuickAttack(){
         const a_guid = $('.info').attr('data-guid');
         var a_coord = null;
         const json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: a_guid },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
@@ -387,6 +420,13 @@
         QuickLinkMax();
     });
     document.querySelector('.i-buttons').appendChild(linkMaxButt);
+
+    let repairButt = document.createElement('button');
+    repairButt.innerText = 'RepairAll';
+    repairButt.addEventListener('click', event => {
+        RepairAll();
+    });
+    document.querySelector('.inventory__controls').appendChild(repairButt);
 
     hideButt();
 
