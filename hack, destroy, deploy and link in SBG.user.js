@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.7.3
+// @version      0.7.4
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -22,7 +22,7 @@
     maxdepl[6]=[6,6,5,5,5,4];
     const type_loot=[];
     type_loot[1]='core';
-    type_loot[2]='bomb'
+    type_loot[2]='bomb';
     function RefreshInv(){
         const inv = JSON.parse(localStorage.getItem('inventory-cache'))
         inv.forEach(e => {
@@ -52,6 +52,7 @@
 
     async function RepairAll(){
         const inv = JSON.parse(localStorage.getItem('inventory-cache'))
+
         inv.forEach(e => {
             if (e.t === 3){
                 const json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: e.l },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
@@ -72,7 +73,11 @@
                                                  success: function(datarep)
                                                  {
                                                      if (!datarep.error){
-                                                         console.log('point=',datarep.data.t,' xp=',datarep.data.xp.diff);
+                                                         console.log('point=',datarep.data.t,' xp=',datarep.xp.diff);
+                                                         let message = `<br><span>${datarep.data.t}</span> ${datarep.xp.diff}xp`;
+                                                         let toast = createToast(`Repair: ${message}`);
+                                                         toast.showToast();
+
                                                      }
                                                  }
                                              });
@@ -81,6 +86,7 @@
                                     });
             }
         });
+
     }
     Object.defineProperty(Array.prototype, 'first', {
         value() {
@@ -138,14 +144,12 @@
                                                  console.log('Hackdata=',disdata);
                                              }
                                          });
-                                         let xpall = 0;
 
                                          ld.data.sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).forEach(e => {
                                              if (e.a >= 2 && getDist(e.g[1],ldcoord) <= 350){
                                                  console.log(e.g);
                                                  const d = getDist(e.g[1],ldcoord)
                                                  console.log('pname=',e.t,' dist=',distToString(d));
-                                                 message +=`<br><span>${e.t}</span> link - ${distToString(d)}`;
                                                  const from = guid
                                                  const to = e.p
                                                  const cofrom = e.g[0]
@@ -158,18 +162,16 @@
                                                          position: cofrom
                                                      },
                                                      headers: { authorization: `Bearer ${localStorage.getItem('auth')}` },
-                                                     success:function(d){
-                                                         console.log('drawdata=',d);
-                                                         xpall = xpall + (d.xp.diff)*1;
+                                                     success:function(dd){
+                                                         console.log('drawdata=',dd);
+                                                         message =`<br><span>${e.t}</span> link - ${distToString(d)} ${dd.xp.diff}xp`;
+                                                         let toast = createToast(`Linked: ${message}`);
+                                                         toast.showToast();
                                                      }
                                                  })
 
                                                  }
-                                         })
-                                         message += `<br><span>EXP </span>${xpall}`;
-
-                                         let toast = createToast(`Hacked: ${message}`);
-                                         toast.showToast();
+                                         }) //endforeach
 
                                      }
                                  })
