@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.7.4
+// @version      0.7.6
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -23,6 +23,24 @@
     const type_loot=[];
     type_loot[1]='core';
     type_loot[2]='bomb';
+
+    const styleString = `
+.ol-layer__lines {
+    filter: opacity(.5);
+}
+
+.ol-layer__markers {
+    filter: brightness(1.2);
+}`
+
+// adds filter styles to the canvas wrapper layers
+    const AddStyles = () => {
+        let style = document.createElement('style')
+        document.head.appendChild(style)
+
+        style.innerHTML = styleString
+    }
+
     function RefreshInv(){
         const inv = JSON.parse(localStorage.getItem('inventory-cache'))
         inv.forEach(e => {
@@ -62,6 +80,9 @@
                                              if (da.data.co.length < 6){
                                                  console.log('point ',da.data.t,' not full cores!');
                                              }
+                                             if (da.data.co.length > 6){
+                                                 console.alert(`point ${da.data.t} ${da.data.co.length} cores!`);
+                                             }
                                              const jsonrep = $.ajax({
                                                  method: 'post',
                                                  url: `/api/repair`,
@@ -96,6 +117,9 @@
     var WinPopup = document.querySelector(".popup-close, .popup-header");
 
     RefreshInv();
+    window.addEventListener('load', async function () {
+        AddStyles()
+    }, false)
     function hideButt(){
         const buttId = ['link-tg','discover','deploy','draw','inventory-delete-section'];
         const buttCl = ['outer-link','deploy-slider-wrp'];
@@ -181,6 +205,7 @@
     async function QuickLinkMax(){
         const guid = $('.info').attr('data-guid')
         var ldcoord = null;
+        let message = '';
         const json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: guid },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
                              success: function(data)
                              {
@@ -214,7 +239,7 @@
                                              }
                                          });
                                          ld.data.sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).slice(1, 17).forEach(e => {
-                                             if (e.a >= 2){
+                                             if (e.a >= 2 && getDist(e.g[1],ldcoord) > 350){
                                                  console.log(e.g);
                                                  const d = getDist(e.g[1],ldcoord)
                                                  console.log('pname=',e.t,' dist=',distToString(d));
@@ -229,7 +254,13 @@
                                                          from, to,
                                                          position: cofrom
                                                      },
-                                                     headers: { authorization: `Bearer ${localStorage.getItem('auth')}` }
+                                                     headers: { authorization: `Bearer ${localStorage.getItem('auth')}` },
+                                                     success:function(dd){
+                                                         console.log('drawdata=',dd);
+                                                         message =`<br><span>${e.t}</span> link - ${distToString(d)} ${dd.xp.diff}xp`;
+                                                         let toast = createToast(`Linked: ${message}`);
+                                                         toast.showToast();
+                                                     }
                                                  })
 
                                                  }
