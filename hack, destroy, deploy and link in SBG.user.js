@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.7.6
+// @version      0.7.8
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -26,7 +26,7 @@
 
     const styleString = `
 .ol-layer__lines {
-    filter: opacity(.5);
+    filter: opacity(.4);
 }
 
 .ol-layer__markers {
@@ -70,42 +70,39 @@
 
     async function RepairAll(){
         const inv = JSON.parse(localStorage.getItem('inventory-cache'))
-
-        inv.forEach(e => {
-            if (e.t === 3){
-                const json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: e.l },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
-                                     success: function(da)
-                                     {
-                                         if (da.data.te == 3){
-                                             if (da.data.co.length < 6){
-                                                 console.log('point ',da.data.t,' not full cores!');
-                                             }
-                                             if (da.data.co.length > 6){
-                                                 console.alert(`point ${da.data.t} ${da.data.co.length} cores!`);
-                                             }
-                                             const jsonrep = $.ajax({
-                                                 method: 'post',
-                                                 url: `/api/repair`,
-                                                 data: {
-                                                     guid: e.l,
-                                                     position: [0,0]
-                                                 },
-                                                 headers: {authorization: `Bearer ${localStorage.getItem('auth')}`},
-                                                 success: function(datarep)
-                                                 {
-                                                     if (!datarep.error){
-                                                         console.log('point=',datarep.data.t,' xp=',datarep.xp.diff);
-                                                         let message = `<br><span>${datarep.data.t}</span> ${datarep.xp.diff}xp`;
-                                                         let toast = createToast(`Repair: ${message}`);
-                                                         toast.showToast();
-
-                                                     }
-                                                 }
-                                             });
+        inv.filter(item => item.t === 3).forEach(e => {
+            const json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: e.l },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
+                                 success: function(da)
+                                 {
+                                     if (da.data.te == 3){
+                                         if (da.data.co.length < 6){
+                                             console.log('point ',da.data.t,' not full cores!');
                                          }
+                                         if (da.data.co.length > 6){
+                                             console.alert(`point ${da.data.t} ${da.data.co.length} cores!`);
+                                         }
+                                         const jsonrep = $.ajax({
+                                             method: 'post',
+                                             url: `/api/repair`,
+                                             data: {
+                                                 guid: e.l,
+                                                 position: [0,0]
+                                             },
+                                             headers: {authorization: `Bearer ${localStorage.getItem('auth')}`},
+                                             success: function(datarep)
+                                             {
+                                                 if (!datarep.error){
+                                                     console.log('point=',datarep.data.t,' xp=',datarep.xp.diff);
+                                                     let message = `<br><span>${datarep.data.t}</span> ${datarep.xp.diff}xp`;
+                                                     let toast = createToast(`Repair: ${message}`);
+                                                     toast.showToast();
+
+                                                 }
+                                             }
+                                         });
                                      }
-                                    });
-            }
+                                 }
+                                });
         });
 
     }
@@ -169,33 +166,33 @@
                                              }
                                          });
 
-                                         ld.data.sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).forEach(e => {
-                                             if (e.a >= 2 && getDist(e.g[1],ldcoord) <= 350){
-                                                 console.log(e.g);
-                                                 const d = getDist(e.g[1],ldcoord)
-                                                 console.log('pname=',e.t,' dist=',distToString(d));
-                                                 const from = guid
-                                                 const to = e.p
-                                                 const cofrom = e.g[0]
+                                         ld.data.filter(keys => (keys.a >= 2 && getDist(keys.g[1],ldcoord) <= 350)).sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).forEach(e => {
+                                             //if (e.a >= 2 && getDist(e.g[1],ldcoord) <= 350){
+                                             console.log(e.g);
+                                             const d = getDist(e.g[1],ldcoord)
+                                             console.log('pname=',e.t,' dist=',distToString(d));
+                                             const from = guid
+                                             const to = e.p
+                                             const cofrom = e.g[0]
 
-                                                 const json = $.ajax({
-                                                     method: 'post',
-                                                     url: '/api/draw',
-                                                     data: {
-                                                         from, to,
-                                                         position: cofrom
-                                                     },
-                                                     headers: { authorization: `Bearer ${localStorage.getItem('auth')}` },
-                                                     success:function(dd){
-                                                         console.log('drawdata=',dd);
-                                                         message =`<br><span>${e.t}</span> link - ${distToString(d)} ${dd.xp.diff}xp`;
-                                                         let toast = createToast(`Linked: ${message}`);
-                                                         toast.showToast();
-                                                     }
-                                                 })
-
+                                             const json = $.ajax({
+                                                 method: 'post',
+                                                 url: '/api/draw',
+                                                 data: {
+                                                     from, to,
+                                                     position: cofrom
+                                                 },
+                                                 headers: { authorization: `Bearer ${localStorage.getItem('auth')}` },
+                                                 success:function(dd){
+                                                     console.log('drawdata=',dd);
+                                                     message =`<br><span>${e.t}</span> link - ${distToString(d)} ${dd.xp.diff}xp`;
+                                                     let toast = createToast(`Linked: ${message}`);
+                                                     toast.showToast();
                                                  }
-                                         }) //endforeach
+                                             })
+
+                                             //}
+                                             }) //endforeach
 
                                      }
                                  })
@@ -238,33 +235,33 @@
                                                  console.log('Hackdata=',disdata);
                                              }
                                          });
-                                         ld.data.sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).slice(1, 17).forEach(e => {
-                                             if (e.a >= 2 && getDist(e.g[1],ldcoord) > 350){
-                                                 console.log(e.g);
-                                                 const d = getDist(e.g[1],ldcoord)
-                                                 console.log('pname=',e.t,' dist=',distToString(d));
-                                                 const from = guid
-                                                 const to = e.p
-                                                 const cofrom = e.g[0]
+                                         ld.data.filter(keys => (keys.a > 2 && getDist(keys.g[1],ldcoord) > 350)).sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).slice(1, 17).forEach(e => {
+                                             //if (e.a >= 2 && getDist(e.g[1],ldcoord) > 350){
+                                             console.log(e.g);
+                                             const d = getDist(e.g[1],ldcoord)
+                                             console.log('pname=',e.t,' dist=',distToString(d));
+                                             const from = guid
+                                             const to = e.p
+                                             const cofrom = e.g[0]
 
-                                                 const json = $.ajax({
-                                                     method: 'post',
-                                                     url: '/api/draw',
-                                                     data: {
-                                                         from, to,
-                                                         position: cofrom
-                                                     },
-                                                     headers: { authorization: `Bearer ${localStorage.getItem('auth')}` },
-                                                     success:function(dd){
-                                                         console.log('drawdata=',dd);
-                                                         message =`<br><span>${e.t}</span> link - ${distToString(d)} ${dd.xp.diff}xp`;
-                                                         let toast = createToast(`Linked: ${message}`);
-                                                         toast.showToast();
-                                                     }
-                                                 })
-
+                                             const json = $.ajax({
+                                                 method: 'post',
+                                                 url: '/api/draw',
+                                                 data: {
+                                                     from, to,
+                                                     position: cofrom
+                                                 },
+                                                 headers: { authorization: `Bearer ${localStorage.getItem('auth')}` },
+                                                 success:function(dd){
+                                                     console.log('drawdata=',dd);
+                                                     message =`<br><span>${e.t}</span> link - ${distToString(d)} ${dd.xp.diff}xp`;
+                                                     let toast = createToast(`Linked: ${message}`);
+                                                     toast.showToast();
                                                  }
-                                         })
+                                             })
+
+                                             //}
+                                             })
                                      }
                                  })
                                  }
