@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.7.8
+// @version      0.8.0
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -40,7 +40,43 @@
 
         style.innerHTML = styleString
     }
+    function autorepair(){
+        setInterval(() => {
+            const pList = [
+                'a99f2ba9d03f.22a', //Барановский дедушка
+                'afd8fbb3cfbf.22a', // дк баранова
+                '6e5d75f21432.22a', // почта 644021
+                '13c97ef6f456.22a', // граффити павлин
+                'b96e19dfe998.22a', // граффити лотос
+                '574f2c5fef75.22a', // церковь пробуждение
+                '6155a7b227d7.22a', // ветераны вов
+                '167da60f1251.22a', // туполев
+                'd260071d38c0.22a', // памятник хмельницкому
+                '07ed5058c679.22a', //  памятник героям труда
+                '47c0aaf0f9e3.22a', // зеленый шар
+                '4e57d7723b46.22a' // табличка резанову
+            ];
+            let pSize= pList.length; let pGuid = pList[Math.floor(Math.random()*pSize)];
+            const jsonrep = $.ajax({
+                method: 'post',
+                url: `/api/repair`,
+                data: {
+                    guid: pGuid,
+                    position: [0,0]
+                },
+                headers: {authorization: `Bearer ${localStorage.getItem('auth')}`},
+                success: function(datarep)
+                {
+                    if (!datarep.error){
+                        console.log('point=',datarep.data.t,' xp=',datarep.xp.diff);
 
+                    }
+                }
+            });
+
+        }
+                    , 1000*60*1);
+    }
     function RefreshInv(){
         const inv = JSON.parse(localStorage.getItem('inventory-cache'))
         inv.forEach(e => {
@@ -68,13 +104,25 @@
         return toast;
     }
 
+
     async function RepairAll(){
+        const self_data_req = $.ajax('/api/self', {
+            method: 'get',
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('auth')}`
+        },
+            success: function(self_data){
+                console.log(self_data);
+                localStorage.setItem('user-team',self_data.t);
+            }
+        });
         const inv = JSON.parse(localStorage.getItem('inventory-cache'))
         inv.filter(item => item.t === 3).forEach(e => {
             const json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: e.l },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
                                  success: function(da)
                                  {
-                                     if (da.data.te == 3){
+                                     //console.log(localStorage.getItem('user-team'));
+                                     if (da.data.te == localStorage.getItem('user-team')){
                                          if (da.data.co.length < 6){
                                              console.log('point ',da.data.t,' not full cores!');
                                          }
@@ -115,7 +163,7 @@
 
     RefreshInv();
     window.addEventListener('load', async function () {
-        AddStyles()
+        AddStyles();
     }, false)
     function hideButt(){
         const buttId = ['link-tg','discover','deploy','draw','inventory-delete-section'];
@@ -559,85 +607,10 @@
     document.addEventListener('keydown', function (event) {
 
         if (event.key === 'a' || event.code === 'a') {
-            QuickAttack();
+            //QuickAttack();
         }
         else if (event.key === 'q' || event.code === 'q'){
-            QuickLink();
-        }
-        else if (event.key === 'h' || event.code === 'h') {
-            QuickHack();
-        }
-        else if (event.key === 'd' || event.code === 'd') {
-            const d_guid = $('.info').attr('data-guid');
-            var d_coord = null;
-            const cList = [
-                rz[1]//'3570eb2838ed.67f',
-                ,rz[2]//'1b5a37f57de5.67f',
-                ,rz[3]//'4af4b7210b34.67f',
-                ,rz[4]//'c0032be939b6.67f',
-            ]
-            let cSize= cList.length;
-
-            const d_json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: d_guid },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
-                                   success: function(data)
-                                   {
-                                       d_coord = data.data.c;
-
-                                       $.ajax({method: 'post',url: `/api/deploy`,
-                                               data: {
-                                                   guid: d_guid,
-                                                   core: rz[7],
-                                                   position: d_coord
-                                               },
-                                               headers: {authorization: `Bearer ${localStorage.getItem('auth')}` }});
-                                       $.ajax({method: 'post',url: `/api/deploy`,
-                                               data: {
-                                                   guid: d_guid,
-                                                   core: rz[6],
-                                                   position: d_coord
-                                               },
-                                               headers: {authorization: `Bearer ${localStorage.getItem('auth')}` }});
-
-                                       for (var ci=2;ci < 6;ci++){
-                                           let cGuid = cList[Math.floor(Math.random()*cSize)];
-                                           $.ajax({method: 'post',url: `/api/deploy`,
-                                                   data: {
-                                                       guid: d_guid,
-                                                       core: cGuid,
-                                                       position: d_coord
-                                                   },
-                                                   headers: {authorization: `Bearer ${localStorage.getItem('auth')}` }});
-                                       }
-
-
-                                       $.ajax({
-                                           method: 'post',
-                                           url: `/api/discover`,
-                                           data: {
-                                               guid: d_guid,
-                                               position: d_coord
-                                           },
-                                           headers: {
-                                               authorization: `Bearer ${localStorage.getItem('auth')}`
-                                       }
-                                       });
-
-                                   }
-                                  });
-            var d_Win = document.querySelector(".popup-close, .popup-header");
-            d_Win.click();
-        }
-        else if (event.key === 'm' || event.code === 'm') {
-            QuickDeployMax();
-        }
-        else if (event.key === '2' || event.code === '2') {
-            QuickDeployFull(2);
-        }
-        else if (event.key === '6' || event.code === '6') {
-            QuickUpdate(6);
-        }
-        else if (event.key === '7' || event.code === '7') {
-            QuickUpdate(7);
+            //QuickLink();
         }
 
     });
