@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.8.1
+// @version      0.8.2
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -200,7 +200,7 @@
                                          WinPopup.click();
                                          localStorage.setItem('follow', false)
 
-                                         ld.data.filter(keys => (keys.a >= 2 && getDist(keys.g[1],ldcoord) <= 350)).sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).forEach(e => {
+                                         ld.data.filter(keys => (keys.a >= 2 && getDist(keys.g[1],ldcoord) <= 350)).sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).slice(1, 17).forEach(e => {
                                              //if (e.a >= 2 && getDist(e.g[1],ldcoord) <= 350){
                                              console.log(e.g);
                                              const d = getDist(e.g[1],ldcoord)
