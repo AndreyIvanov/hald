@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.8.0
+// @version      0.8.1
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -114,6 +114,7 @@
             success: function(self_data){
                 console.log(self_data);
                 localStorage.setItem('user-team',self_data.t);
+                localStorage.setItem('user-lvl',self_data.l);
             }
         });
         const inv = JSON.parse(localStorage.getItem('inventory-cache'))
@@ -159,7 +160,7 @@
             return this.find(Boolean)
         }
     })
-    var WinPopup = document.querySelector(".popup-close, .popup-header");
+    var WinPopup = $('.popup-close');
 
     RefreshInv();
     window.addEventListener('load', async function () {
@@ -198,21 +199,6 @@
                                      {
                                          WinPopup.click();
                                          localStorage.setItem('follow', false)
-                                         const qdraw_discover = $.ajax({
-                                             method: 'post',
-                                             url: `/api/discover`,
-                                             data: {
-                                                 position: ldcoord,
-                                                 guid
-                                             },
-                                             headers: {
-                                                 authorization: `Bearer ${localStorage.getItem('auth')}`
-                                       },
-                                             success: function(disdata)
-                                             {
-                                                 console.log('Hackdata=',disdata);
-                                             }
-                                         });
 
                                          ld.data.filter(keys => (keys.a >= 2 && getDist(keys.g[1],ldcoord) <= 350)).sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).forEach(e => {
                                              //if (e.a >= 2 && getDist(e.g[1],ldcoord) <= 350){
@@ -267,22 +253,6 @@
                                      {
                                          WinPopup.click();
                                          localStorage.setItem('follow', false)
-                                         //console.log('#refs-list',ld.data);
-                                         const draw_discover = $.ajax({
-                                             method: 'post',
-                                             url: `/api/discover`,
-                                             data: {
-                                                 position: ldcoord,
-                                                 guid
-                                             },
-                                             headers: {
-                                                 authorization: `Bearer ${localStorage.getItem('auth')}`
-                                       },
-                                             success: function(disdata)
-                                             {
-                                                 console.log('Hackdata=',disdata);
-                                             }
-                                         });
                                          ld.data.filter(keys => (keys.a > 2 && getDist(keys.g[1],ldcoord) > 350)).sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).slice(1, 17).forEach(e => {
                                              //if (e.a >= 2 && getDist(e.g[1],ldcoord) > 350){
                                              console.log(e.g);
@@ -451,25 +421,26 @@
                                                 slot: $('.i-stat__core.selected').attr('data-guid')
                                             },
                                             headers: {authorization: `Bearer ${localStorage.getItem('auth')}` }});
-
-                                    $.ajax({
-                                        method: 'post',
-                                        url: `/api/discover`,
-                                        data: {
-                                            guid: m6_guid,
-                                            position: m_coord
-                                        },
-                                        headers: {
-                                            authorization: `Bearer ${localStorage.getItem('auth')}`
-                                       }
-                                    });
                                 }
                                });
         WinPopup.click();
     }
     async function QuickAttack(){
+        const self_data_req = $.ajax('/api/self', {
+            method: 'get',
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('auth')}`
+        },
+            success: function(self_data){
+                console.log(self_data);
+                localStorage.setItem('user-lvl',self_data.l);
+            }
+        });
+
         const a_guid = $('.info').attr('data-guid');
         var a_coord = null;
+        var b_lvl = localStorage.getItem('user-lvl');
+        console.log("Bomb LVL=",b_lvl);
         const json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: a_guid },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
                              success: function(data)
                              {
@@ -483,7 +454,7 @@
                                      },
                                      data: JSON.stringify({
                                          position: a_coord,
-                                         guid:bm[6]
+                                         guid:bm[b_lvl]
                                      })
                                  })
                                  }
