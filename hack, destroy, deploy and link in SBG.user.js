@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.8.2
+// @version      0.8.4
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -17,6 +17,8 @@
     const rz = [];
     const bm = [];
     const maxdepl = [];
+    maxdepl[10]=[10,9,8,7,7,6];
+    maxdepl[9]=[9,8,7,7,6,6];
     maxdepl[8]=[8,7,7,6,6,5];
     maxdepl[7]=[7,7,6,6,5,5];
     maxdepl[6]=[6,6,5,5,5,4];
@@ -163,12 +165,9 @@
     var WinPopup = $('.popup-close');
 
     RefreshInv();
-    window.addEventListener('load', async function () {
-        AddStyles();
-    }, false)
     function hideButt(){
-        const buttId = ['link-tg','discover','deploy','draw','inventory-delete-section'];
-        const buttCl = ['outer-link','deploy-slider-wrp'];
+        const buttId = ['discover','deploy','draw','inventory-delete-section'];
+        const buttCl = ['deploy-slider-wrp'];
         buttId.forEach(e => {
             var b = document.getElementById(e);
             b.style.display = 'none';
@@ -178,6 +177,10 @@
             b.css({ "display": "none"});
         })
     }
+    window.addEventListener('load', async function () {
+        AddStyles();
+        hideButt();
+    }, false)
 
     async function QuickLink(){
         const guid = $('.info').attr('data-guid')
@@ -454,7 +457,7 @@
                                      },
                                      data: JSON.stringify({
                                          position: a_coord,
-                                         guid:bm[b_lvl]
+                                         guid:bm[b_lvl-1]
                                      })
                                  })
                                  }
@@ -486,19 +489,43 @@
     deployM6Butt.addEventListener('click', event => {
         QuickDeployMax(6);
     });
-    document.querySelector('.i-buttons').appendChild(deployM6Butt);
+    //document.querySelector('.i-buttons').appendChild(deployM6Butt);
     let deployM7Butt = document.createElement('button');
     deployM7Butt.innerText = 'Max-7';
     deployM7Butt.addEventListener('click', event => {
         QuickDeployMax(7);
     });
-    document.querySelector('.i-buttons').appendChild(deployM7Butt);
+    //document.querySelector('.i-buttons').appendChild(deployM7Butt);
     let deployM8Butt = document.createElement('button');
     deployM8Butt.innerText = 'Max-8';
     deployM8Butt.addEventListener('click', event => {
         QuickDeployMax(8);
     });
-    document.querySelector('.i-buttons').appendChild(deployM8Butt);
+    //document.querySelector('.i-buttons').appendChild(deployM8Butt);
+
+    let deployMButt = document.createElement('button');
+    deployMButt.innerText = 'Max';
+    deployMButt.addEventListener('click', event => {
+
+        const self_data_req = $.ajax('/api/self', {
+            method: 'get',
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('auth')}`
+        },
+            success: function(self_data){
+                console.log(self_data);
+                localStorage.setItem('user-lvl',self_data.l);
+            }
+        });
+
+        const a_guid = $('.info').attr('data-guid');
+        var a_coord = null;
+        var b_lvl = localStorage.getItem('user-lvl');
+        console.log("LVL=",b_lvl);
+
+        QuickDeployMax(b_lvl);
+    });
+    document.querySelector('.i-buttons').appendChild(deployMButt);
 
     let deploy1Butt = document.createElement('button');
     deploy1Butt.innerText = 'Full-1';
@@ -537,6 +564,12 @@
         QuickUpdate(8);
     });
     document.querySelector('.i-buttons').appendChild(update8Butt);
+    let update9Butt = document.createElement('button');
+    update9Butt.innerText = 'Upd-9';
+    update9Butt.addEventListener('click', event => {
+        QuickUpdate(9);
+    });
+    document.querySelector('.i-buttons').appendChild(update9Butt);
 
     let linkButt = document.createElement('button');
     linkButt.innerText = 'QLink';
@@ -559,7 +592,7 @@
     });
     document.querySelector('.inventory__controls').appendChild(repairButt);
 
-    hideButt();
+
 
     var pImgBox = document.getElementById("i-image");
     pImgBox.style.minHeight = '35px';
