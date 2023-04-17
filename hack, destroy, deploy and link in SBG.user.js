@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.8.5
+// @version      0.8.6
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -201,9 +201,11 @@
                                      success: function(ld)
                                      {
                                          WinPopup.click();
-                                         localStorage.setItem('follow', false)
+                                         localStorage.setItem('follow', false);
+                                         console.log('q keys=',ld.data);
+                                         console.log('q keys filter=',ld.data.filter(keys => (keys.a >= 2 && keys.d <= 350)));
 
-                                         ld.data.filter(keys => (keys.a >= 2 && getDist(keys.g[1],ldcoord) <= 350)).sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).slice(1, 17).forEach(e => {
+                                         ld.data.filter(keys => (keys.a >= 2 && keys.d <= 350)).sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).slice(0, 17).forEach(e => {
                                              //if (e.a >= 2 && getDist(e.g[1],ldcoord) <= 350){
                                              console.log(e.g);
                                              const d = getDist(e.g[1],ldcoord)
@@ -256,7 +258,10 @@
                                      {
                                          WinPopup.click();
                                          localStorage.setItem('follow', false)
-                                         ld.data.filter(keys => (keys.a > 2 && getDist(keys.g[1],ldcoord) > 350)).sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).slice(1, 17).forEach(e => {
+                                         console.log('max keys=',ld.data);
+                                         console.log('max keys filter=',ld.data.filter(keys => (keys.a > 2 && keys.d > 350)));
+
+                                         ld.data.filter(keys => (keys.a > 2 && keys.d > 350)).sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).slice(0, 17).forEach(e => {
                                              //if (e.a >= 2 && getDist(e.g[1],ldcoord) > 350){
                                              console.log(e.g);
                                              const d = getDist(e.g[1],ldcoord)
