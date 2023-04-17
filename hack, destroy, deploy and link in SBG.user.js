@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.8.4
+// @version      0.8.5
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -130,7 +130,7 @@
                                              console.log('point ',da.data.t,' not full cores!');
                                          }
                                          if (da.data.co.length > 6){
-                                             console.alert(`point ${da.data.t} ${da.data.co.length} cores!`);
+                                             console.log(`point ${da.data.t} ${da.data.co.length} cores!`);
                                          }
                                          const jsonrep = $.ajax({
                                              method: 'post',
@@ -345,15 +345,31 @@
                                success: function(data)
                                {
                                    m_coord = data.data.c;
-                                   maxdepl[lvl].forEach(e => {
-                                       $.ajax({method: 'post',url: `/api/deploy`,
-                                               data: {
-                                                   guid: m_guid,
-                                                   core: rz[e],
-                                                   position: m_coord
-                                               },
-                                               headers: {authorization: `Bearer ${localStorage.getItem('auth')}` }});
-                                   });
+                                   var cn = data.data.co.length;
+                                   if (cn>0){
+                                       for (var cni=cn;cni < 6;cni++){
+                                           let cGuid = rz[3];
+                                           $.ajax({method: 'post',url: `/api/deploy`,
+                                                   data: {
+                                                       guid: m_guid,
+                                                       core: cGuid,
+                                                       position: m_coord
+                                                   },
+                                                   headers: {authorization: `Bearer ${localStorage.getItem('auth')}` }});
+                                       }
+                                   }
+                                   else {
+
+                                       maxdepl[lvl].forEach(e => {
+                                           $.ajax({method: 'post',url: `/api/deploy`,
+                                                   data: {
+                                                       guid: m_guid,
+                                                       core: rz[e],
+                                                       position: m_coord
+                                                   },
+                                                   headers: {authorization: `Bearer ${localStorage.getItem('auth')}` }});
+                                       });
+                                   }
 
                                    $.ajax({
                                        method: 'post',
@@ -379,18 +395,32 @@
                                 success: function(data)
                                 {
                                     d2_coord = data.data.c;
-
-                                    for (var ci=0;ci < 6;ci++){
-                                        let cGuid = rz[lvl];
-                                        $.ajax({method: 'post',url: `/api/deploy`,
-                                                data: {
-                                                    guid: d2_guid,
-                                                    core: cGuid,
-                                                    position: d2_coord
-                                                },
-                                                headers: {authorization: `Bearer ${localStorage.getItem('auth')}` }});
+                                    var cn = data.data.co.length;
+                                    if (cn>0){
+                                        for (var cni=cn;cni < 6;cni++){
+                                            let cGuid = rz[3];
+                                            $.ajax({method: 'post',url: `/api/deploy`,
+                                                    data: {
+                                                        guid: d2_guid,
+                                                        core: cGuid,
+                                                        position: d2_coord
+                                                    },
+                                                    headers: {authorization: `Bearer ${localStorage.getItem('auth')}` }});
+                                        }
                                     }
+                                    else {
 
+                                        for (var ci=0;ci < 6;ci++){
+                                            let cGuid = rz[lvl];
+                                            $.ajax({method: 'post',url: `/api/deploy`,
+                                                    data: {
+                                                        guid: d2_guid,
+                                                        core: cGuid,
+                                                        position: d2_coord
+                                                    },
+                                                    headers: {authorization: `Bearer ${localStorage.getItem('auth')}` }});
+                                        }
+                                    }
 
                                     $.ajax({
                                         method: 'post',
@@ -591,7 +621,6 @@
         RepairAll();
     });
     document.querySelector('.inventory__controls').appendChild(repairButt);
-
 
 
     var pImgBox = document.getElementById("i-image");
