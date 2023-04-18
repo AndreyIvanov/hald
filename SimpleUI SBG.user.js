@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         SimpleUI SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.0.1
+// @version      0.0.2
 // @description  Облегчение жизни оленеводу SBG!
 // @author       WhiteHacker
 // @match        https://3d.sytes.net/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=sytes.net
-// @downloadURL  https://github.com/AndreyIvanov/hald/raw/main/hack%2C%20destroy%2C%20deploy%20and%20link%20in%20SBG.user.js
-// @updateURL    https://github.com/AndreyIvanov/hald/raw/main/hack%2C%20destroy%2C%20deploy%20and%20link%20in%20SBG.user.js
+// @downloadURL  https://github.com/AndreyIvanov/hald/blob/main/SimpleUI%20SBG.user.js
+// @updateURL    https://github.com/AndreyIvanov/hald/blob/main/SimpleUI%20SBG.user.js
 // @grant        none
 // ==/UserScript==
 /* globals jQuery, $, waitForKeyElements */
