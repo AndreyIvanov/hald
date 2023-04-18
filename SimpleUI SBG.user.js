@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleUI SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.0.2
+// @version      0.0.3
 // @description  Облегчение жизни оленеводу SBG!
 // @author       WhiteHacker
 // @match        https://3d.sytes.net/
@@ -16,10 +16,11 @@
     'use strict';
 
     const styleString = `
+/*
 .ol-layer__lines {
     filter: opacity(.4);
 }
-
+*/
 .ol-layer__markers {
     filter: brightness(1.2);
 }`
@@ -195,6 +196,7 @@
 
     let linkMaxButt = document.createElement('button');
     linkMaxButt.innerText = 'Наоленить во все ключи';
+    linkMaxButt.setAttribute('id','linkMaxButt');
     linkMaxButt.addEventListener('click', event => {
         QuickLinkMax();
     });
@@ -204,5 +206,12 @@
     var pImgBox = document.getElementById("i-image");
     pImgBox.style.minHeight = '35px';
     $('.i-image-box').css({ "min-height": "150px"});
+
+    var timers = null;
+    clearInterval(timers)
+    timers = setInterval(() => {
+        $('#linkMaxButt').prop('disabled',$('#draw').prop('disabled'));
+    }, 100)
+
 
 })();
