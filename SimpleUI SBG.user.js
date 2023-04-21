@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleUI SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.0.3
+// @version      0.0.4
 // @description  Облегчение жизни оленеводу SBG!
 // @author       WhiteHacker
 // @match        https://3d.sytes.net/
@@ -16,11 +16,6 @@
     'use strict';
 
     const styleString = `
-/*
-.ol-layer__lines {
-    filter: opacity(.4);
-}
-*/
 .ol-layer__markers {
     filter: brightness(1.2);
 }`
@@ -126,11 +121,13 @@
     async function QuickLinkMax(){
         const guid = $('.info').attr('data-guid')
         var ldcoord = null;
+        var cout = 0;
         let message = '';
         const json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: guid },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
                              success: function(data)
                              {
                                  ldcoord = data.data.c;
+                                 cout = data.data.li.o;
                                  const ldjson = $.ajax({
                                      method: 'get',
                                      url: '/api/draw',
@@ -157,7 +154,7 @@
                                                  toast.showToast();
                                              }
                                          }
-                                         ld.data.filter(keys => (keys.a > 2)).slice(0, 17).forEach(e => {
+                                         ld.data.filter(keys => (keys.a > 2)).slice(0, 20 - cout).forEach(e => {
                                              console.log(e.g);
                                              const from = guid
                                              const to = e.p

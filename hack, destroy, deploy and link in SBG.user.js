@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.8.6
+// @version      0.8.8
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -25,10 +25,12 @@
     const type_loot=[];
     type_loot[1]='core';
     type_loot[2]='bomb';
+    const dist2link = 500;
 
     const styleString = `
+
 .ol-layer__lines {
-    filter: opacity(.4);
+    filter: opacity(.6);
 }
 
 .ol-layer__markers {
@@ -185,11 +187,13 @@
     async function QuickLink(){
         const guid = $('.info').attr('data-guid')
         var ldcoord = null;
+        var cout = 0;
         let message = '';
         const json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: guid },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
                              success: function(data)
                              {
                                  ldcoord = data.data.c;
+                                 cout = data.data.li.o;
                                  const ldjson = $.ajax({
                                      method: 'get',
                                      url: '/api/draw',
@@ -203,9 +207,9 @@
                                          WinPopup.click();
                                          localStorage.setItem('follow', false);
                                          console.log('q keys=',ld.data);
-                                         console.log('q keys filter=',ld.data.filter(keys => (keys.a >= 2 && keys.d <= 350)));
+                                         console.log('q keys filter=',ld.data.filter(keys => (keys.a >= 2 && keys.d <= dist2link)));
 
-                                         ld.data.filter(keys => (keys.a >= 2 && keys.d <= 350)).sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).slice(0, 17).forEach(e => {
+                                         ld.data.filter(keys => (keys.a >= 2 && keys.d <= dist2link)).slice(0, 20 - cout).forEach(e => {
                                              //if (e.a >= 2 && getDist(e.g[1],ldcoord) <= 350){
                                              console.log(e.g);
                                              const d = getDist(e.g[1],ldcoord)
@@ -241,11 +245,13 @@
     async function QuickLinkMax(){
         const guid = $('.info').attr('data-guid')
         var ldcoord = null;
+        var cout = 0;
         let message = '';
         const json = $.ajax({ method: 'get', url: `/api/point`, data: { guid: guid },headers: {authorization: `Bearer ${localStorage.getItem('auth')}` },
                              success: function(data)
                              {
                                  ldcoord = data.data.c;
+                                 cout=data.data.li.o;
                                  const ldjson = $.ajax({
                                      method: 'get',
                                      url: '/api/draw',
@@ -259,9 +265,9 @@
                                          WinPopup.click();
                                          localStorage.setItem('follow', false)
                                          console.log('max keys=',ld.data);
-                                         console.log('max keys filter=',ld.data.filter(keys => (keys.a > 2 && keys.d > 350)));
+                                         console.log('max keys filter=',ld.data.filter(keys => (keys.a > 2 && keys.d > dist2link)));
 
-                                         ld.data.filter(keys => (keys.a > 2 && keys.d > 350)).sort((a, b) => getDist(a.g[1],ldcoord) - getDist(b.g[1],ldcoord)).slice(0, 17).forEach(e => {
+                                         ld.data.filter(keys => (keys.a > 2 && keys.d > dist2link)).slice(0, 20-cout).forEach(e => {
                                              //if (e.a >= 2 && getDist(e.g[1],ldcoord) > 350){
                                              console.log(e.g);
                                              const d = getDist(e.g[1],ldcoord)
