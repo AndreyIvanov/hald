@@ -6,6 +6,8 @@
 // @author       You
 // @match        https://3d.sytes.net/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=sytes.net
+// @downloadURL  https://github.com/AndreyIvanov/hald/raw/main/Statistics%20SBG.user.js
+// @updateURL    https://github.com/AndreyIvanov/hald/raw/main/Statistics%20SBG.user.js
 // @grant        none
 // ==/UserScript==
 /* globals jQuery, $, waitForKeyElements, ol */
