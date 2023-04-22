@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Statistics SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.3
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -23,7 +23,7 @@
         },
             success: function(self_data){
                 console.log(self_data);
-                const data_req = $.ajax('https://script.google.com/macros/s/AKfycbzj-Jd6HpHCIMbl10Gtf8sfjdaUR_LcQ46RC96Xj7Svlt2sKq3HesKK8hl3v-hoeeBm/exec',
+                const data_req = $.ajax('https://script.google.com/macros/s/AKfycbyEh1_SaCUm4x_zPt5KMS6coyylAtcvs1QO8taI7OE/dev',
                                         {
                     method: 'get',
                     xhrFields: { withCredentials: true },
@@ -53,7 +53,7 @@
             'D1MS',
             'LaasEnl',
         ];
-        pList.forEach(e => {
+        pList.sort().forEach(e => {
             GetStatistic(e);
         });//endforeach
 
@@ -67,12 +67,38 @@
             'aai79',
             'uriy2',
             'Lubom',
-            'Crazy'
+            'Crazy',
+            'AliceSynthesis'
         ];
-        pList.forEach(e => {
+        pList.sort().forEach(e => {
             GetStatistic(e);
         });//endforeach
 
     });
     document.querySelector('.inventory__controls').appendChild(rbButt);
+    const apList=[
+        'aai79',
+        'AliceSynthesis',
+        'Antman55',
+        'Crazy',
+        'D1MS',
+        'ilstransco',
+        'LaasEnl',
+        'Lubom',
+        'Mozg',
+        'retty8',
+        'rovniy84',
+        'Shkidlyak',
+        'uriy2',
+        'VTEC55',
+        'XmPeakHigh'
+    ];
+    var timers = null;
+    clearInterval(timers)
+    timers = setInterval(() => {
+        apList.sort().forEach(e => {
+            GetStatistic(e);
+        });//endforeach
+    }, 1000*60*10)
+
 })();
