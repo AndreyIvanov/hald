@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Statistics SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.5
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -68,7 +68,8 @@
             'uriy2',
             'Lubom',
             'Crazy',
-            'AliceSynthesis'
+            'AliceSynthesis',
+            'Satanic'
         ];
         pList.sort().forEach(e => {
             GetStatistic(e);
@@ -76,18 +77,33 @@
 
     });
     document.querySelector('.inventory__controls').appendChild(rbButt);
+    let rrButt = document.createElement('button');
+    rrButt.innerText = 'Stat R';
+    rrButt.addEventListener('click', event => {
+        const pList = [
+            /*'Gost00', helicopter*/
+            'XmPeakHigh',
+        ];
+        pList.sort().forEach(e => {
+            GetStatistic(e);
+        });//endforeach
+
+    });
+    document.querySelector('.inventory__controls').appendChild(rrButt);
     const apList=[
         'aai79',
         'AliceSynthesis',
         'Antman55',
         'Crazy',
         'D1MS',
+        /*'Gost00', helicopter*/
         'ilstransco',
         'LaasEnl',
         'Lubom',
         'Mozg',
         'retty8',
         'rovniy84',
+        'Satanic',
         'Shkidlyak',
         'uriy2',
         'VTEC55',
@@ -99,6 +115,8 @@
         apList.sort().forEach(e => {
             GetStatistic(e);
         });//endforeach
+        var now = new Date();
+        console.log('Execution datetime=', now);
     }, 1000*60*10)
 
 })();

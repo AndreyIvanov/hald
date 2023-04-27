@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.8.8
+// @version      0.8.9
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -14,13 +14,15 @@
 
 (function() {
     'use strict';
+     if (document.querySelector('script[src="/intel.js"]')) { return; }
+
     const rz = [];
     const bm = [];
     const maxdepl = [];
-    maxdepl[10]=[10,9,8,7,7,6];
-    maxdepl[9]=[9,8,7,7,6,6];
-    maxdepl[8]=[8,7,7,6,6,5];
-    maxdepl[7]=[7,7,6,6,5,5];
+    maxdepl[10]=[10,9,8,7,7];
+    maxdepl[9]=[9,8,7,7,6];
+    maxdepl[8]=[8,7,7,6,5];
+    maxdepl[7]=[7,7,6,5,5];
     maxdepl[6]=[6,6,5,5,5,4];
     const type_loot=[];
     type_loot[1]='core';
@@ -632,6 +634,52 @@
         RepairAll();
     });
     document.querySelector('.inventory__controls').appendChild(repairButt);
+
+    let rButt = document.createElement('button');
+    rButt.innerText = 'Sendstat';
+    rButt.addEventListener('click', event => {
+        const pList = [
+            'Shkidlyak',
+            'aai79',
+            'Antman55',
+            'Mozg',
+            'ilstransco',
+            'rovniy84',
+            'VTEC55',
+            'retty8',
+            'D1MS',
+            'uriy2',
+            'XmPeakHigh',
+            'LaasEnl',
+            'Lubom',
+            'Crazy'
+        ];
+        pList.forEach(e => {
+            const self_data_req = $.ajax('/api/profile', {
+                method: 'get',data: { name: e },
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem('auth')}`
+        },
+                success: function(self_data){
+                    console.log(self_data);
+                    var now = new Date();
+                    //?chat_id=-1001746801535&parse_mode=html&text=Новость сервера
+                    const data_req = $.ajax('https://script.google.com/macros/s/AKfycbyEh1_SaCUm4x_zPt5KMS6coyylAtcvs1QO8taI7OE/dev',
+                                            {
+                        method: 'get',
+                        xhrFields: { withCredentials: true },
+                        crossDomain: true,
+                        dataType: "jsonp",
+                        contentType: "application/json",
+                        data: {dt:now, d: JSON.stringify(self_data.data)},
+
+                    });
+                }
+            });
+        });//endforeach
+
+    });
+    //document.querySelector('.inventory__controls').appendChild(rButt);
 
 
     var pImgBox = document.getElementById("i-image");
