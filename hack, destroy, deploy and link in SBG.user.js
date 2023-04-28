@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.8.9
+// @version      0.8.10
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -14,7 +14,7 @@
 
 (function() {
     'use strict';
-     if (document.querySelector('script[src="/intel.js"]')) { return; }
+    if (document.querySelector('script[src="/intel.js"]')) { return; }
 
     const rz = [];
     const bm = [];
@@ -84,7 +84,19 @@
                     , 1000*60*1);
     }
     function RefreshInv(){
+        const self_data_req = $.ajax('/api/self', {
+            method: 'get',
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('auth')}`
+        },
+            success: function(self_data){
+                console.log(self_data);
+                localStorage.setItem('user-team',self_data.t);
+                localStorage.setItem('user-lvl',self_data.l);
+            }
+        });
         const inv = JSON.parse(localStorage.getItem('inventory-cache'))
+        if (inv.length == 0) return;
         inv.forEach(e => {
             if (e.t == 1){
                 rz[e.l] = e.g
@@ -92,7 +104,10 @@
             if (e.t == 2){
                 bm[e.l] = e.g
             }
-        })
+        });
+        let descm = document.createElement('span');
+        descm.innerText = '(hald)';
+        document.querySelector('#self-info__explv').appendChild(descm);
     }
     function createToast(text = '', position = 'top left', container = null) {
         let parts = position.split(/\s+/);
@@ -168,7 +183,6 @@
     })
     var WinPopup = $('.popup-close');
 
-    RefreshInv();
     function hideButt(){
         const buttId = ['discover','deploy','draw','inventory-delete-section'];
         const buttCl = ['deploy-slider-wrp'];
@@ -184,6 +198,8 @@
     window.addEventListener('load', async function () {
         AddStyles();
         hideButt();
+        RefreshInv();
+
     }, false)
 
     async function QuickLink(){
