@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleUI SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.0.4
+// @version      0.0.5
 // @description  Облегчение жизни оленеводу SBG!
 // @author       WhiteHacker
 // @match        https://3d.sytes.net/
@@ -103,7 +103,7 @@
 
     function hideButt(){
         const buttId = ['inventory-delete-section'];
-        const buttCl = ['deploy-slider-wrp'];
+        const buttCl = [];
         buttId.forEach(e => {
             var b = document.getElementById(e);
             b.style.display = 'none';
