@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleUI SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.0.5
+// @version      0.0.6
 // @description  Облегчение жизни оленеводу SBG!
 // @author       WhiteHacker
 // @match        https://3d.sytes.net/
@@ -191,24 +191,25 @@
     });
     document.querySelector('.inventory__controls').appendChild(repairButt);
 
-    let linkMaxButt = document.createElement('button');
-    linkMaxButt.innerText = 'Наоленить во все ключи';
-    linkMaxButt.setAttribute('id','linkMaxButt');
-    linkMaxButt.addEventListener('click', event => {
-        QuickLinkMax();
-    });
-    document.querySelector('.i-buttons').appendChild(linkMaxButt);
-
+    if (document.querySelector('script[src="/script.js"]')) {
+        let linkMaxButt = document.createElement('button');
+        linkMaxButt.innerText = 'Наоленить во все ключи';
+        linkMaxButt.setAttribute('id','linkMaxButt');
+        linkMaxButt.addEventListener('click', event => {
+            QuickLinkMax();
+        });
+        document.querySelector('.i-buttons').appendChild(linkMaxButt);
+    }
 
     var pImgBox = document.getElementById("i-image");
     pImgBox.style.minHeight = '35px';
     $('.i-image-box').css({ "min-height": "150px"});
-
-    var timers = null;
-    clearInterval(timers)
-    timers = setInterval(() => {
-        $('#linkMaxButt').prop('disabled',$('#draw').prop('disabled'));
-    }, 100)
-
+    if (document.querySelector('script[src="/script.js"]')) {
+        var timers = null;
+        clearInterval(timers)
+        timers = setInterval(() => {
+            $('#linkMaxButt').prop('disabled',$('#draw').prop('disabled'));
+        }, 100);
+    }
 
 })();
