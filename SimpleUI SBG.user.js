@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleUI SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.0.6
+// @version      0.0.8
 // @description  Облегчение жизни оленеводу SBG!
 // @author       WhiteHacker
 // @match        https://3d.sytes.net/
@@ -138,23 +138,28 @@
                                      headers: { authorization: `Bearer ${localStorage.getItem('auth')}` },
                                      success: function(ld)
                                      {
-                                         WinPopup.click();
                                          localStorage.setItem('follow', false)
                                          if (ld.data == undefined){
+                                             WinPopup.click();
                                              message =`<br><span>Нет возможных ключей для линковки</span>`;
                                              let toast = createToast(`Внимание: ${message}`);
                                              toast.showToast();
                                              return;
                                          } else {
+
                                              console.log('max keys=',ld.data);
                                              console.log('max keys filter=',ld.data.filter(keys => (keys.a > 2)));
+                                             if (ld.data.filter(keys => (keys.a > 2)).length == 0)
+                                             {
+                                                 WinPopup.click();
+                                             }
                                              if (ld.data.filter(keys => (keys.a > 2)).length == 0){
                                                  message =`<br><span>Слишком мало ключей для оленеводства</span><br><span>Должно быть больше 2-х</span>`;
                                                  let toast = createToast(`Внимание: ${message}`);
                                                  toast.showToast();
                                              }
                                          }
-                                         ld.data.filter(keys => (keys.a > 2)).slice(0, 20 - cout).forEach(e => {
+                                         ld.data.filter(keys => (keys.a > 2)).slice(0, 20 - cout).slice(0,1).forEach(e => {
                                              console.log(e.g);
                                              const from = guid
                                              const to = e.p
