@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.8.10
+// @version      0.9.0
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -222,12 +222,16 @@
                                      headers: { authorization: `Bearer ${localStorage.getItem('auth')}` },
                                      success: function(ld)
                                      {
-                                         WinPopup.click();
+                                         //WinPopup.click();
                                          localStorage.setItem('follow', false);
                                          console.log('q keys=',ld.data);
                                          console.log('q keys filter=',ld.data.filter(keys => (keys.a >= 2 && keys.d <= dist2link)));
+                                         if (ld.data.filter(keys => (keys.a >= 2 && keys.d <= dist2link)).length == 0)
+                                         {
+                                             WinPopup.click();
+                                         }
 
-                                         ld.data.filter(keys => (keys.a >= 2 && keys.d <= dist2link)).slice(0, 20 - cout).forEach(e => {
+                                         ld.data.filter(keys => (keys.a >= 2 && keys.d <= dist2link)).slice(0, 20 - cout).slice(0,1).forEach(e => {
                                              //if (e.a >= 2 && getDist(e.g[1],ldcoord) <= 350){
                                              console.log(e.g);
                                              const d = getDist(e.g[1],ldcoord)
@@ -280,12 +284,16 @@
                                      headers: { authorization: `Bearer ${localStorage.getItem('auth')}` },
                                      success: function(ld)
                                      {
-                                         WinPopup.click();
+                                         //WinPopup.click();
                                          localStorage.setItem('follow', false)
                                          console.log('max keys=',ld.data);
                                          console.log('max keys filter=',ld.data.filter(keys => (keys.a > 2 && keys.d > dist2link)));
+                                         if (ld.data.filter(keys => (keys.a > 2 && keys.d > dist2link)).length == 0)
+                                         {
+                                             WinPopup.click();
+                                         }
 
-                                         ld.data.filter(keys => (keys.a > 2 && keys.d > dist2link)).slice(0, 20-cout).forEach(e => {
+                                         ld.data.filter(keys => (keys.a > 2 && keys.d > dist2link)).slice(0, 20-cout).slice(0,1).forEach(e => {
                                              //if (e.a >= 2 && getDist(e.g[1],ldcoord) > 350){
                                              console.log(e.g);
                                              const d = getDist(e.g[1],ldcoord)
