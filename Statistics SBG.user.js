@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Statistics SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.6
+// @version      0.7.3
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -32,7 +32,6 @@
     }
 
     async function GetStatistic(username){
-        var now = new Date();
         const self_data_req = $.ajax('/api/profile', {
             method: 'get',data: { name: username },
             headers: {
@@ -46,12 +45,19 @@
 
                 const data_req = $.ajax('https://script.google.com/macros/s/AKfycbyEh1_SaCUm4x_zPt5KMS6coyylAtcvs1QO8taI7OE/dev',
                                         {
+
+                    headers: {
+                        Accept : "application/json; charset=utf-8",
+                        "Content-Type": "text/plain; charset=utf-8"
+                    },
                     method: 'get',
-                    xhrFields: { withCredentials: true },
+                    /*xhrFields: { withCredentials: true },*/
                     crossDomain: true,
                     dataType: "jsonp",
+                    followRedirects: true,
+                    muteHttpExceptions: true,
                     contentType: "application/json",
-                    data: {dt:now, d: JSON.stringify(self_data.data)},
+                    data: {d: JSON.stringify(self_data.data)},
                     success:function(rq){
                         console.log('docs answer=',rq);
                     }
@@ -65,6 +71,7 @@
     rgButt.innerText = 'Стата зеленых';
     rgButt.addEventListener('click', event => {
         const pList = [
+            '55Vadim',
             'Antman55',
             'Mozg',
             'ilstransco',
@@ -73,6 +80,7 @@
             'retty8',
             'D1MS',
             'LaasEnl',
+            'Lev555'
         ];
         pList.sort().forEach(e => {
             GetStatistic(e);
@@ -103,7 +111,9 @@
     rrButt.addEventListener('click', event => {
         const pList = [
             /*'Gost00', helicopter*/
+            'CVRIM',
             'XmPeakHigh',
+            'TemosCat'
         ];
         pList.sort().forEach(e => {
             GetStatistic(e);
@@ -116,20 +126,24 @@
     document.querySelector('#self-info__explv').appendChild(descm);
 
     const apList=[
+        '55Vadim',
         'aai79',
         'AliceSynthesis',
         'Antman55',
         'Crazy',
+        'CVRIM',
         'D1MS',
         /*'Gost00', helicopter*/
         'ilstransco',
         'LaasEnl',
+        'Lev555',
         'Lubom',
         'Mozg',
         'retty8',
         'rovniy84',
         'Satanic',
         'Shkidlyak',
+        'TemosCat',
         'uriy2',
         'VTEC55',
         'XmPeakHigh'
@@ -142,6 +156,6 @@
         });//endforeach
         var now = new Date();
         console.log('Execution datetime=', now);
-    }, 1000*60*10)
+    }, 1000*60*12)
 
 })();
