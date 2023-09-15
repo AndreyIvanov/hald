@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.9.0
+// @version      0.9.1
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -594,49 +594,56 @@
     });
     document.querySelector('.i-buttons').appendChild(deployMButt);
 
+    let update6Butt = document.createElement('button');
+    update6Butt.innerText = 'U-6';
+    update6Butt.addEventListener('click', event => {
+        QuickUpdate(6);
+    });
+    document.querySelector('.i-buttons').appendChild(update6Butt);
+
     let deploy1Butt = document.createElement('button');
-    deploy1Butt.innerText = 'Full-1';
+    deploy1Butt.innerText = 'F-1';
     deploy1Butt.addEventListener('click', event => {
         QuickDeployFull(1);
     });
     document.querySelector('.i-buttons').appendChild(deploy1Butt);
     let deploy2Butt = document.createElement('button');
-    deploy2Butt.innerText = 'Full-2';
+    deploy2Butt.innerText = 'F-2';
     deploy2Butt.addEventListener('click', event => {
         QuickDeployFull(2);
     });
-    document.querySelector('.i-buttons').appendChild(deploy2Butt);
+    //document.querySelector('.i-buttons').appendChild(deploy2Butt);
     let deploy3Butt = document.createElement('button');
-    deploy3Butt.innerText = 'Full-3';
+    deploy3Butt.innerText = 'F-3';
     deploy3Butt.addEventListener('click', event => {
         QuickDeployFull(3);
     });
     document.querySelector('.i-buttons').appendChild(deploy3Butt);
 
-    let update6Butt = document.createElement('button');
-    update6Butt.innerText = 'Upd-6';
-    update6Butt.addEventListener('click', event => {
-        QuickUpdate(6);
-    });
-    document.querySelector('.i-buttons').appendChild(update6Butt);
     let update7Butt = document.createElement('button');
-    update7Butt.innerText = 'Upd-7';
+    update7Butt.innerText = 'U-7';
     update7Butt.addEventListener('click', event => {
         QuickUpdate(7);
     });
     document.querySelector('.i-buttons').appendChild(update7Butt);
     let update8Butt = document.createElement('button');
-    update8Butt.innerText = 'Upd-8';
+    update8Butt.innerText = 'U-8';
     update8Butt.addEventListener('click', event => {
         QuickUpdate(8);
     });
     document.querySelector('.i-buttons').appendChild(update8Butt);
     let update9Butt = document.createElement('button');
-    update9Butt.innerText = 'Upd-9';
+    update9Butt.innerText = 'U-9';
     update9Butt.addEventListener('click', event => {
         QuickUpdate(9);
     });
     document.querySelector('.i-buttons').appendChild(update9Butt);
+    let update10Butt = document.createElement('button');
+    update10Butt.innerText = 'U-10';
+    update10Butt.addEventListener('click', event => {
+        QuickUpdate(10);
+    });
+    document.querySelector('.i-buttons').appendChild(update10Butt);
 
     let linkButt = document.createElement('button');
     linkButt.innerText = 'QLink';
