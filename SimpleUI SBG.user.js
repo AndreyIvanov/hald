@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleUI SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.0.8
+// @version      0.0.9
 // @description  Облегчение жизни оленеводу SBG!
 // @author       WhiteHacker
 // @match        https://3d.sytes.net/
@@ -80,8 +80,8 @@
                                              success: function(datarep)
                                              {
                                                  if (!datarep.error){
-                                                     console.log('point=',datarep.data.t,' xp=',datarep.xp.diff);
-                                                     let message = `<br><span>${datarep.data.t}</span> ${datarep.xp.diff}xp`;
+                                                     console.log('point=',da.data.t,' xp=',datarep.xp.diff);
+                                                     let message = `<br><span>${da.data.t}</span> ${datarep.xp.diff}xp`;
                                                      let toast = createToast(`Repair: ${message}`);
                                                      toast.showToast();
 
@@ -102,7 +102,7 @@
     var WinPopup = $('.popup-close');
 
     function hideButt(){
-        const buttId = ['inventory-delete-section'];
+        const buttId = [];
         const buttCl = [];
         buttId.forEach(e => {
             var b = document.getElementById(e);

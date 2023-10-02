@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.9.2
+// @version      0.9.3
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -162,11 +162,10 @@
                                              success: function(datarep)
                                              {
                                                  if (!datarep.error){
-                                                     console.log('point=',datarep.data.t,' xp=',datarep.xp.diff);
-                                                     let message = `<br><span>${datarep.data.t}</span> ${datarep.xp.diff}xp`;
+                                                     console.log('point=',da.data.t,' xp=',datarep.xp.diff);
+                                                     let message = `<br><span>${da.data.t}</span> ${datarep.xp.diff}xp`;
                                                      let toast = createToast(`Repair: ${message}`);
                                                      toast.showToast();
-
                                                  }
                                              }
                                          });
