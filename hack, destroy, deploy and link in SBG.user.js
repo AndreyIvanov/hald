@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.9.1
+// @version      0.9.2
 // @description  try to take over the world!
 // @author       You
 // @match        https://3d.sytes.net/
@@ -184,7 +184,7 @@
     var WinPopup = $('.popup-close');
 
     function hideButt(){
-        const buttId = ['discover','deploy','draw','inventory-delete-section'];
+        const buttId = ['discover','deploy','draw'];
         const buttCl = ['deploy-slider-wrp'];
         buttId.forEach(e => {
             var b = document.getElementById(e);
