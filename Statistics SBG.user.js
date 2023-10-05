@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Statistics SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.7.3
+// @version      0.7.6
 // @description  try to take over the world!
 // @author       You
-// @match        https://3d.sytes.net/
+// @match        https://sbg-game.ru/app/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=sytes.net
 // @downloadURL  https://github.com/AndreyIvanov/hald/raw/main/Statistics%20SBG.user.js
 // @updateURL    https://github.com/AndreyIvanov/hald/raw/main/Statistics%20SBG.user.js
@@ -113,7 +113,9 @@
             /*'Gost00', helicopter*/
             'CVRIM',
             'XmPeakHigh',
-            'TemosCat'
+            'TemosCat',
+            'yakuza',
+            'spectra1979'
         ];
         pList.sort().forEach(e => {
             GetStatistic(e);
@@ -143,10 +145,12 @@
         'rovniy84',
         'Satanic',
         'Shkidlyak',
+        'spectra1979',
         'TemosCat',
         'uriy2',
         'VTEC55',
-        'XmPeakHigh'
+        'XmPeakHigh',
+        'yakuza'
     ];
     var timers = null;
     clearInterval(timers)

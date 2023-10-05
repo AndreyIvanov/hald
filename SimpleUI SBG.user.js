@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         SimpleUI SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.0.9
+// @version      0.0.10
 // @description  Облегчение жизни оленеводу SBG!
 // @author       WhiteHacker
-// @match        https://3d.sytes.net/
+// @match        https://sbg-game.ru/app/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=sytes.net
 // @downloadURL  https://github.com/AndreyIvanov/hald/raw/main/SimpleUI%20SBG.user.js
 // @updateURL    https://github.com/AndreyIvanov/hald/raw/main/SimpleUI%20SBG.user.js
