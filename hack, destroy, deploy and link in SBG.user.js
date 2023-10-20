@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hack, destroy, deploy and link in SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.9.4
+// @version      0.9.5
 // @description  try to take over the world!
 // @author       You
 // @match        https://sbg-game.ru/app/
@@ -19,11 +19,11 @@
     const rz = [];
     const bm = [];
     const maxdepl = [];
-    maxdepl[10]=[10,9,8,7,7];
-    maxdepl[9]=[9,8,7,7,6];
-    maxdepl[8]=[8,7,7,6,5];
-    maxdepl[7]=[7,7,6,5,5];
-    maxdepl[6]=[6,6,5,5,5,4];
+    maxdepl[10]=[10,9,8,8,7]; //+7
+    maxdepl[9]=[9,8,8,7,6]; //+7
+    maxdepl[8]=[8,8,7,6,6]; //+7
+    maxdepl[7]=[7,6,6,6,5]; //+7
+    maxdepl[6]=[6,6,5,5,5]; //+6
     const type_loot=[];
     type_loot[1]='core';
     type_loot[2]='bomb';
@@ -384,7 +384,7 @@
                                    var cn = data.data.co.length;
                                    if (cn>0){
                                        for (var cni=cn;cni < 6;cni++){
-                                           let cGuid = rz[3];
+                                           let cGuid = rz[2];
                                            $.ajax({method: 'post',url: `/api/deploy`,
                                                    data: {
                                                        guid: m_guid,
@@ -434,7 +434,7 @@
                                     var cn = data.data.co.length;
                                     if (cn>0){
                                         for (var cni=cn;cni < 6;cni++){
-                                            let cGuid = rz[3];
+                                            let cGuid = rz[2];
                                             $.ajax({method: 'post',url: `/api/deploy`,
                                                     data: {
                                                         guid: d2_guid,
@@ -570,7 +570,8 @@
     //document.querySelector('.i-buttons').appendChild(deployM8Butt);
 
     let deployMButt = document.createElement('button');
-    deployMButt.innerText = 'Max';
+    var m_lvl = localStorage.getItem('user-lvl');
+    deployMButt.innerText = 'Max '+(m_lvl>6?' + U-7 btn':'+ U-6 btn');
     deployMButt.addEventListener('click', event => {
 
         const self_data_req = $.ajax('/api/self', {
@@ -600,24 +601,6 @@
     });
     document.querySelector('.i-buttons').appendChild(update6Butt);
 
-    let deploy1Butt = document.createElement('button');
-    deploy1Butt.innerText = 'F-1';
-    deploy1Butt.addEventListener('click', event => {
-        QuickDeployFull(1);
-    });
-    document.querySelector('.i-buttons').appendChild(deploy1Butt);
-    let deploy2Butt = document.createElement('button');
-    deploy2Butt.innerText = 'F-2';
-    deploy2Butt.addEventListener('click', event => {
-        QuickDeployFull(2);
-    });
-    //document.querySelector('.i-buttons').appendChild(deploy2Butt);
-    let deploy3Butt = document.createElement('button');
-    deploy3Butt.innerText = 'F-3';
-    deploy3Butt.addEventListener('click', event => {
-        QuickDeployFull(3);
-    });
-    document.querySelector('.i-buttons').appendChild(deploy3Butt);
 
     let update7Butt = document.createElement('button');
     update7Butt.innerText = 'U-7';
@@ -643,6 +626,38 @@
         QuickUpdate(10);
     });
     document.querySelector('.i-buttons').appendChild(update10Butt);
+
+    let update1Butt = document.createElement('button');
+    update1Butt.innerText = 'U-1';
+    update1Butt.addEventListener('click', event => {
+        QuickUpdate(1);
+    });
+    document.querySelector('.i-buttons').appendChild(update1Butt);
+    let update2Butt = document.createElement('button');
+    update2Butt.innerText = 'U-2';
+    update2Butt.addEventListener('click', event => {
+        QuickUpdate(2);
+    });
+    document.querySelector('.i-buttons').appendChild(update2Butt);
+
+    let deploy1Butt = document.createElement('button');
+    deploy1Butt.innerText = 'F-1';
+    deploy1Butt.addEventListener('click', event => {
+        QuickDeployFull(1);
+    });
+    document.querySelector('.i-buttons').appendChild(deploy1Butt);
+    let deploy2Butt = document.createElement('button');
+    deploy2Butt.innerText = 'F-2';
+    deploy2Butt.addEventListener('click', event => {
+        QuickDeployFull(2);
+    });
+    document.querySelector('.i-buttons').appendChild(deploy2Butt);
+    let deploy3Butt = document.createElement('button');
+    deploy3Butt.innerText = 'F-3';
+    deploy3Butt.addEventListener('click', event => {
+        QuickDeployFull(3);
+    });
+    //document.querySelector('.i-buttons').appendChild(deploy3Butt);
 
     let linkButt = document.createElement('button');
     linkButt.innerText = 'QLink';
