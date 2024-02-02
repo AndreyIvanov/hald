@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Statistics SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.7.6
+// @version      0.7.9
 // @description  try to take over the world!
 // @author       You
 // @match        https://sbg-game.ru/app/
@@ -57,7 +57,7 @@
                     followRedirects: true,
                     muteHttpExceptions: true,
                     contentType: "application/json",
-                    data: {d: JSON.stringify(self_data.data)},
+                    data: {d: JSON.stringify(self_data)},
                     success:function(rq){
                         console.log('docs answer=',rq);
                     }
@@ -80,7 +80,8 @@
             'retty8',
             'D1MS',
             'LaasEnl',
-            'Lev555'
+            'Lev555',
+            'Sneghana'
         ];
         pList.sort().forEach(e => {
             GetStatistic(e);
@@ -115,7 +116,8 @@
             'XmPeakHigh',
             'TemosCat',
             'yakuza',
-            'spectra1979'
+            'spectra1979',
+            'Yegger'
         ];
         pList.sort().forEach(e => {
             GetStatistic(e);
@@ -136,6 +138,7 @@
         'CVRIM',
         'D1MS',
         /*'Gost00', helicopter*/
+        'Yegger',
         'ilstransco',
         'LaasEnl',
         'Lev555',
@@ -146,6 +149,7 @@
         'Satanic',
         'Shkidlyak',
         'spectra1979',
+        'Sneghana',
         'TemosCat',
         'uriy2',
         'VTEC55',
