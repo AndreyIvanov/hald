@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Statistics SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.7.9
+// @version      0.7.10
 // @description  try to take over the world!
 // @author       You
 // @match        https://sbg-game.ru/app/
@@ -75,13 +75,15 @@
             'Antman55',
             'Mozg',
             'ilstransco',
+            'iLYaMASU',
             'rovniy84',
             'VTEC55',
             'retty8',
             'D1MS',
             'LaasEnl',
             'Lev555',
-            'Sneghana'
+            'Sneghana',
+            'RINZLER'
         ];
         pList.sort().forEach(e => {
             GetStatistic(e);
@@ -140,6 +142,7 @@
         /*'Gost00', helicopter*/
         'Yegger',
         'ilstransco',
+        'iLYaMASU',
         'LaasEnl',
         'Lev555',
         'Lubom',
@@ -150,6 +153,7 @@
         'Shkidlyak',
         'spectra1979',
         'Sneghana',
+        'RINZLER',
         'TemosCat',
         'uriy2',
         'VTEC55',
