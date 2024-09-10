@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Statistics SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.7.10
+// @version      0.7.11
 // @description  try to take over the world!
 // @author       You
 // @match        https://sbg-game.ru/app/
@@ -98,6 +98,7 @@
             'Shkidlyak',
             'aai79',
             'uriy2',
+            'kaurcev',
             'Lubom',
             'Crazy',
             'AliceSynthesis',
@@ -143,6 +144,7 @@
         'Yegger',
         'ilstransco',
         'iLYaMASU',
+        'kaurcev',
         'LaasEnl',
         'Lev555',
         'Lubom',
