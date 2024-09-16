@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Statistics SBG
 // @namespace    http://tampermonkey.net/
-// @version      0.7.11
+// @version      0.7.12
 // @description  try to take over the world!
 // @author       You
 // @match        https://sbg-game.ru/app/
@@ -79,6 +79,7 @@
             'rovniy84',
             'VTEC55',
             'retty8',
+            'FlammaIdola',
             'D1MS',
             'LaasEnl',
             'Lev555',
@@ -150,6 +151,7 @@
         'Lubom',
         'Mozg',
         'retty8',
+        'FlammaIdola',
         'rovniy84',
         'Satanic',
         'Shkidlyak',
